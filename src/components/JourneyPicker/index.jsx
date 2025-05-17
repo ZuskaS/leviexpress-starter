@@ -1,10 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 
+const CityOptions = ({ cities }) => {
+  return cities.map((city) => (
+    <option key={city.code} value={city.code}>
+      {city.name}
+    </option>
+  ));
+};
+
 export const JourneyPicker = ({ onJourneyChange }) => {
   const [fromCity, setFromCity] = useState('');
   const [toCity, setToCity] = useState('');
   const [date, setDate] = useState('');
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const fetchCity = async () => {
+      const response = await fetch(
+        'https://apps.kodim.cz/daweb/leviexpress/api/cities',
+      );
+      const responseData = await response.json();
+      setCities(responseData.results);
+    };
+    console.log(cities);
+    fetchCity();
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,11 +45,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
               onChange={(event) => setFromCity(event.target.value)}
             >
               <option value="">Vyberte</option>
-              <option value="mesto01">Město 01</option>
-              <option value="mesto02">Město 02</option>
-              <option value="mesto03">Město 03</option>
-              <option value="mesto04">Město 04</option>
-              <option value="mesto05">Město 05</option>
+              <CityOptions cities={cities} />
             </select>
           </label>
           <label>
@@ -38,11 +55,7 @@ export const JourneyPicker = ({ onJourneyChange }) => {
               onChange={(event) => setToCity(event.target.value)}
             >
               <option value="">Vyberte</option>
-              <option value="mesto01">Město 01</option>
-              <option value="mesto02">Město 02</option>
-              <option value="mesto03">Město 03</option>
-              <option value="mesto04">Město 04</option>
-              <option value="mesto05">Město 05</option>
+              <CityOptions cities={cities} />
             </select>
           </label>
           <label>
@@ -52,11 +65,10 @@ export const JourneyPicker = ({ onJourneyChange }) => {
               onChange={(event) => setDate(event.target.value)}
             >
               <option value="">Vyberte</option>
-              <option value="datum01">Datum 01</option>
-              <option value="datum02">Datum 02</option>
-              <option value="datum03">Datum 03</option>
-              <option value="datum04">Datum 04</option>
-              <option value="datum05">Datum 05</option>
+              <option>20.05.2024</option>
+              <option>21.05.2024</option>
+              <option>22.05.2024</option>
+              <option>23.05.2024</option>
             </select>
           </label>
           <div className="journey-picker__controls">
